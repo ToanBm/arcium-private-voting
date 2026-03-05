@@ -1,0 +1,58 @@
+import { useState, useEffect, useCallback } from 'react'
+import { PublicKey } from '@solana/web3.js'
+import BN from 'bn.js'
+import type { VotingProgram } from './useProgram'
+
+export type ProposalStatus = 'initializing' | 'active' | 'closed' | 'finalized'
+
+export interface ProposalAccount {
+  publicKey: PublicKey
+  account: {
+    creator: PublicKey
+    nonce: BN
+    title: string
+    description: string
+    endTime: BN
+    voteCount: number
+    result: BN | null
+    status: Record<ProposalStatus, Record<string, unknown>>
+    bump: number
+  }
+}
+
+const STATUS_ORDER: Record<string, number> = {
+  active: 0,
+  initializing: 1,
+  closed: 2,
+  finalized: 3,
+}
+
+export function useProposals(program: VotingProgram | null) {
+  const [proposals, setProposals] = useState<ProposalAccount[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const fetchProposals = useCallback(async () => {
+    if (!program) return
+    setLoading(true)
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const all = await (program.account as any).proposal.all()
+      const sorted = (all as ProposalAccount[]).sort((a, b) => {
+        const aKey = Object.keys(a.account.status)[0]
+        const bKey = Object.keys(b.account.status)[0]
+        return (STATUS_ORDER[aKey] ?? 9) - (STATUS_ORDER[bKey] ?? 9)
+      })
+      setProposals(sorted)
+    } catch (e) {
+      console.error('Failed to fetch proposals:', e)
+    } finally {
+      setLoading(false)
+    }
+  }, [program])
+
+  useEffect(() => {
+    fetchProposals()
+  }, [fetchProposals])
+
+  return { proposals, loading, refetch: fetchProposals }
+}

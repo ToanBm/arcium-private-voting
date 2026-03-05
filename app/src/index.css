@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: linear-gradient(180deg, #061F2A 0%, #041822 100%);
+    min-height: 100vh;
+    color: #ffffff;
+    font-family: 'Urbanist', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #041822;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(74, 198, 255, 0.2);
+    border-radius: 3px;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+}
+
+@layer utilities {
+  .bg-doma-card {
+    background: linear-gradient(135deg, rgba(11, 30, 38, 0.8) 0%, rgba(11, 30, 38, 0.4) 100%);
+  }
+}
+
+/* Wallet adapter modal overrides */
+.wallet-adapter-modal-wrapper {
+  background: linear-gradient(135deg, rgba(11, 30, 38, 0.95) 0%, rgba(11, 30, 38, 0.8) 100%) !important;
+  border: 1px solid rgba(248, 253, 255, 0.1) !important;
+  border-radius: 20px !important;
+  backdrop-filter: blur(8px) !important;
+}
