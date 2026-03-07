@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program } from '@coral-xyz/anchor'
-import idl from '../../../target/idl/private_voting.json'
+import idl from '../idl/private_voting.json'
 import { COMMITMENT } from '../constants'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
