@@ -35,8 +35,10 @@ export function useProposals(program: VotingProgram | null) {
     if (!program) return
     setLoading(true)
     try {
+      // Filter by dataSize=448 to skip old 447-byte proposals from a previous
+      // deployment that lacked the vote_in_flight field and can't be deserialized.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const all = await (program.account as any).proposal.all()
+      const all = await (program.account as any).proposal.all([{ dataSize: 448 }])
       const sorted = (all as ProposalAccount[]).sort((a, b) => {
         const aKey = Object.keys(a.account.status)[0]
         const bKey = Object.keys(b.account.status)[0]

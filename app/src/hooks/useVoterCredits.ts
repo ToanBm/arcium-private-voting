@@ -13,9 +13,21 @@ export function useVoterCredits(program: VotingProgram | null, voter: PublicKey 
     setLoading(true)
     try {
       const [pda] = getVoterCreditsPda(voter)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const acc = await (program.account as any).voterCredits.fetch(pda)
-      setCredits((acc.credits as { toNumber(): number }).toNumber())
+      // First try the normal Anchor fetch (works for 57-byte accounts).
+      // If that fails (e.g. old 49-byte account from a previous deployment that
+      // lacked the last_top_up field), fall back to reading raw bytes so existing
+      // voters aren't locked out.
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const acc = await (program.account as any).voterCredits.fetch(pda)
+        setCredits((acc.credits as { toNumber(): number }).toNumber())
+      } catch {
+        // Raw fallback: discriminator(8) + voter pubkey(32) + credits(u64 LE) = bytes 40–47
+        const info = await program.provider.connection.getAccountInfo(pda)
+        if (!info) throw new Error('Account not found')
+        const credits = Number(info.data.readBigUInt64LE(40))
+        setCredits(credits)
+      }
       setRegistered(true)
     } catch {
       setRegistered(false)

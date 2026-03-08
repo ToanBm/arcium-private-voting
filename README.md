@@ -4,8 +4,9 @@
 
 Votes are cast and tallied inside encrypted shared state managed by Arcium's MPC cluster. Individual vote directions are never observable — only the final net tally is revealed on-chain, with a correctness proof from the cluster.
 
-[![Live App](https://img.shields.io/badge/Live%20App-private--voting.vercel.app-4AC6FF?style=flat-square)](https://private-voting.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-yourname%2Fprivate--voting-white?style=flat-square&logo=github)](https://github.com/yourname/private-voting)
+[![Live App](https://img.shields.io/badge/Live%20App-private--voting.vercel.app-4AC6FF?style=flat-square)](https://arcium-private-voting.vercel.app/)
+
+[![GitHub](https://img.shields.io/badge/GitHub-yourname%2Fprivate--voting-white?style=flat-square&logo=github)](https://github.com/ToanBm/arcium-private-voting)
 
 ---
 

@@ -184,10 +184,10 @@ export function App() {
             <div className="flex items-center justify-between mb-6 gap-3">
               <div className="bg-doma-card border border-white/10 rounded-[20px] p-1 flex items-center gap-1">
                 {([
-                  { key: 'active', label: 'Active', count: proposals.filter(p => Object.keys(p.account.status)[0] === 'active').length },
+                  { key: 'active', label: 'Active', count: proposals.filter(p => { const s = Object.keys(p.account.status)[0]; return s === 'active' || s === 'initializing' }).length },
                   { key: 'mine',   label: 'Mine',   count: proposals.filter(p => publicKey && p.account.creator.equals(publicKey)).length },
                   { key: 'voted',  label: 'Voted',  count: votedProposalKeys.size },
-                  { key: 'ended',  label: 'Ended',  count: proposals.filter(p => { const s = Object.keys(p.account.status)[0]; return s === 'initializing' || s === 'closed' || s === 'finalized' }).length },
+                  { key: 'ended',  label: 'Closed',  count: proposals.filter(p => { const s = Object.keys(p.account.status)[0]; return s === 'closed' || s === 'finalized' }).length },
                 ] as const).map(({ key, label, count }) => (
                   <button
                     key={key}
@@ -247,10 +247,10 @@ export function App() {
             {(() => {
               const filtered = proposals.filter(p => {
                 const s = Object.keys(p.account.status)[0]
-                if (activeFilter === 'active') return s === 'active'
+                if (activeFilter === 'active') return s === 'active' || s === 'initializing'
                 if (activeFilter === 'mine')   return publicKey != null && p.account.creator.equals(publicKey)
                 if (activeFilter === 'voted')  return votedProposalKeys.has(p.publicKey.toBase58())
-                if (activeFilter === 'ended')  return s === 'initializing' || s === 'closed' || s === 'finalized'
+                if (activeFilter === 'ended')  return s === 'closed' || s === 'finalized'
                 return true
               })
               const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
